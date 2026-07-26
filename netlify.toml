@@ -1,0 +1,20 @@
+# TopoCheck 当前使用 app/page.tsx + Next/Vinext 构建，不是 public/index.html 纯静态目录。
+# Netlify 通过 Next Runtime 处理 SSR 与资源路由；发布目录由 .next 生成。
+
+[build]
+  command = "pnpm run build:vercel"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# 让 Netlify 在构建时启用 Next.js Runtime，保证刷新 / 路由时不返回 404。
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# 本项目只有一个主入口；不存在的客户端路径回退到主入口，已存在的静态资源不受影响。
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
+  force = false
